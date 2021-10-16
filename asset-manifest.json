@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/primary-math/static/css/main.d95baf9a.chunk.css",
-    "main.js": "/primary-math/static/js/main.e77b3b00.chunk.js",
-    "main.js.map": "/primary-math/static/js/main.e77b3b00.chunk.js.map",
+    "main.js": "/primary-math/static/js/main.f7c2c6f2.chunk.js",
+    "main.js.map": "/primary-math/static/js/main.f7c2c6f2.chunk.js.map",
     "runtime-main.js": "/primary-math/static/js/runtime-main.a59f8820.js",
     "runtime-main.js.map": "/primary-math/static/js/runtime-main.a59f8820.js.map",
     "static/js/2.54c90e6b.chunk.js": "/primary-math/static/js/2.54c90e6b.chunk.js",
@@ -15,6 +15,6 @@
     "static/js/runtime-main.a59f8820.js",
     "static/js/2.54c90e6b.chunk.js",
     "static/css/main.d95baf9a.chunk.css",
-    "static/js/main.e77b3b00.chunk.js"
+    "static/js/main.f7c2c6f2.chunk.js"
   ]
 }
