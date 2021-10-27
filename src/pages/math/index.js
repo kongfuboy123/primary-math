@@ -3,13 +3,11 @@ import React, { Component } from 'react';
 class MathTest extends Component {
   initState = {
     // 初始化习题数组
-    //题库数组
     arr:[],
     //是否显示批改
     isShow : 'hidden',
     //是否显示答案
     isAnswer:false,
-   
     
   };
   state = this.initState;
@@ -20,7 +18,7 @@ class MathTest extends Component {
     const num = Math.floor(rand * range + min);
     return num;
   }
-
+  // 随机生成整数， 1 为个位数，2为两位数
   getRandomNumber = (n=1) => {
         return this.randomNumber(10**(n-1),10**n-1);
   } 
@@ -57,11 +55,22 @@ class MathTest extends Component {
     const res = num1 * num2
       
     return {
-      Q: `${num1} X ${num2} =`,
+      Q: `${num1} × ${num2} = `  ,
       A: res}
   }
+
+  division = (num1, num2) => {
+    
+    const res = num1 / num2
+    
+    return {
+      Q: `${num1} ÷ ${num2} = `  ,
+      A: res}
+    
+    
+  }
   /* 题库生成器，n为生成题目数量，func为题目类型,n1,n2 为数字位数，两位数就是2，个位数就1
-  例如两位数加法，func就是addtion n1，n2 都是2 */ 
+  例如两位数加法，func就是addtion ，n1、n2 都选2 */ 
   generator = (n,func,n1,n2) =>{
     let arr = [];
     for (let i = 0; i < n; i++){
@@ -71,6 +80,25 @@ class MathTest extends Component {
       arr.push(Object.assign({},{index:i},res))
     }
     return arr
+  }
+  //
+  generator2 = (n,func,n1,n2) =>{
+    let arr = [];
+    let count = 0;
+    for (let i = 0; i < 100; i++){
+      const num1 = this.getRandomNumber(n1);
+      const num2 = this.getRandomNumber(n2)+1;// 除数最小值为2
+      if (num1%num2 === 0){
+        const res = func(num1,num2);
+        
+        arr.push(Object.assign({},{index:count},res));
+        count++;
+        if (count >= n){
+          return arr
+        }
+      }
+    }
+
   }
 
 
@@ -130,6 +158,10 @@ class MathTest extends Component {
         this.resetAll();
         this.setState({arr: this.generator(10,this.multiplication,1,1)});
         break;
+      case 'division ':
+        this.resetAll();
+        this.setState({arr: this.generator2(10,this.division,2,1)});
+        break;
       case 'answer':
         const flag = !this.state.isAnswer
         this.setState({isAnswer: flag});
@@ -161,6 +193,7 @@ class MathTest extends Component {
           <button name="add100" onClick={(e)=>this.handleClick(e)}>100以内加法10道</button>
           <button name="sub100" onClick={(e)=>this.handleClick(e)}>100以内减法10道</button>
           <button name="multiply " onClick={(e)=>this.handleClick(e)}>乘法10道</button>
+          <button name="division " onClick={(e)=>this.handleClick(e)}>除法10道</button>
         </nav>
 
         <form id='data-box' onChange={this.throttle(this.handleChange,500)}>
@@ -169,7 +202,7 @@ class MathTest extends Component {
             {this.state.arr.map(data =>
             <li key={data.index} >
               <span style={{fontWeight:200}}>({data.index+1})</span> 
-              <span>{data.Q}</span>
+              <span>{data.Q}</span>&nbsp;
               <input type="text" name={data.index} />
               <span name={data.index} style={{color:'red',visibility:`${this.state.isShow}` }}></span>
             </li>
