@@ -1,57 +1,58 @@
-import React, { Component } from 'react';
+import React, {useState,useRef } from 'react';
 
-class MathTest extends Component {
-  initState = {
+const MathTest = () => {
+  const initState = {
     // 初始化习题数组
     arr:[],
     //是否显示批改
     isShow : 'hidden',
     //是否显示答案
     isAnswer:false,
-    
-  };
-  state = this.initState;
-  //生成随机整数(min,max)为生成整数范围
-  randomNumber = (min, max) =>{
+  }
+  const [test,setTest]=useState(initState)
+  const myRef = useRef()
+
+ 
+   //生成随机整数(min,max)为生成整数范围
+  const randomNumber = (min, max) =>{
     const range = max - min + 1;
     const rand = Math.random() ;
     const num = Math.floor(rand * range + min);
     return num;
   }
-  // 随机生成整数， 1 为个位数，2为两位数
-  getRandomNumber = (n=1) => {
-        return this.randomNumber(10**(n-1),10**n-1);
+   // 随机生成整数， 1 为个位数，2为两位数
+   const getRandomNumber = (n=1) => {
+    return randomNumber(10**(n-1),10**n-1);
   } 
-  
-  
-  //加法
-  addition = (num1, num2) => {
+
+//加法
+  const addition = (num1, num2) => {
+
+  const sum = num1 + num2
     
-    const sum = num1 + num2
-      
-    return {
-      Q: `${num1} + ${num2} =`,
-      A: sum}
+  return {
+    Q: `${num1} + ${num2} =`,
+    A: sum}
   }
-    //减法
-  subtraction = (num1, num2) => {
-    if(num1 >= num2){
-      const diff = num1 - num2
-      return { 
-          Q: `${num1} - ${num2} =`,
-          A: diff
-      }
-    }else{
-      const diff = num2 - num1
-      return{
-          Q: `${num2} - ${num1} =`,
-          A: diff
-      }
+  //减法
+  const subtraction = (num1, num2) => {
+  if(num1 >= num2){
+    const diff = num1 - num2
+    return { 
+        Q: `${num1} - ${num2} =`,
+        A: diff
+    }
+  }else{
+    const diff = num2 - num1
+    return{
+        Q: `${num2} - ${num1} =`,
+        A: diff
     }
   }
-  
-  multiplication = (num1, num2) => {
-    
+  }
+
+  const multiplication = (num1, num2) => {
+
     const res = num1 * num2
       
     return {
@@ -59,35 +60,35 @@ class MathTest extends Component {
       A: res}
   }
 
-  division = (num1, num2) => {
-    
+  const division = (num1, num2) => {
+
     const res = num1 / num2
-    
+
     return {
       Q: `${num1} ÷ ${num2} = `  ,
       A: res}
-    
-    
+
+
   }
   /* 题库生成器，n为生成题目数量，func为题目类型,n1,n2 为数字位数，两位数就是2，个位数就1
   例如两位数加法，func就是addtion ，n1、n2 都选2 */ 
-  generator = (n,func,n1,n2) =>{
+  const generator = (n,func,n1,n2) =>{
     let arr = [];
     for (let i = 0; i < n; i++){
-      const num1 = this.getRandomNumber(n1);
-      const num2 = this.getRandomNumber(n2);
+      const num1 = getRandomNumber(n1);
+      const num2 = getRandomNumber(n2);
       const res = func(num1,num2);
       arr.push(Object.assign({},{index:i},res))
     }
     return arr
   }
-  //
-  generator2 = (n,func,n1,n2) =>{
+//
+  const generator2 = (n,func,n1,n2) =>{
     let arr = [];
     let count = 0;
     for (let i = 0; i < 100; i++){
-      const num1 = this.getRandomNumber(n1);
-      const num2 = this.getRandomNumber(n2)+1;// 除数最小值为2
+      const num1 = getRandomNumber(n1);
+      const num2 = getRandomNumber(n2)+1;// 除数最小值为2
       if (num1%num2 === 0){
         const res = func(num1,num2);
         
@@ -100,80 +101,56 @@ class MathTest extends Component {
     }
 
   }
-
-
-
-
-
-
-// 处理input框内填写答案
-  handleChange = (e)=>{
+  const handleChange = (e)=>{
     //this.state.arr[e.target.name].A 为题目数组内答案，e.target.value为input内填写的答案
-   
-    if(this.state.arr[e.target.name].A == e.target.value){
+  
+    if(test.arr[e.target.name].A == e.target.value){
       e.target.nextElementSibling.innerText ='✓';
     }else{
       e.target.nextElementSibling.innerText ='X';
     }  
   }
-  //加个防抖
-  throttle = (fn,delay)=>{
-    let timer = null;
-    return (...args)=>{
-      if(timer) {
-        clearTimeout(timer);
-      }
-      timer = setTimeout(()=>fn.apply(this,args),delay);   
-    }
-  }
-
-  resetAll = () => { 
-    //reset form
-    document.getElementById("data-box").reset();
-    //reset state
-    this.setState(this.initState);
-  }
   //根据e.target.name，来选择对应的click
-  handleClick = (e) => {
-    
+  const handleClick = (e) => {
+      
     switch (e.target.name){
       case 'add10':
         
-        this.resetAll();
-        this.setState({arr: this.generator(10,this.addition,1,1)});
+        resetAll();
+        setTest({arr: generator(10,addition,1,1)});
         break;
       case 'add100':
-        this.resetAll();
-        this.setState({arr: this.generator(10,this.addition,2,2)});
+        resetAll();
+        setTest({arr: generator(10,addition,2,2)});
         break;
       case 'sub10':
-        this.resetAll();
-        this.setState({arr: this.generator(10,this.subtraction,1,1)});
+        resetAll();
+        setTest({arr: generator(10,subtraction,1,1)});
         break;
       case 'sub100':
-        this.resetAll();
-        this.setState({arr: this.generator(10,this.subtraction,2,2)});
+        resetAll();
+        setTest({arr: generator(10,subtraction,2,2)});
         break;
       case 'multiply ':
-        this.resetAll();
-        this.setState({arr: this.generator(10,this.multiplication,1,1)});
+        resetAll();
+        setTest({arr: generator(10,multiplication,1,1)});
         break;
       case 'division ':
-        this.resetAll();
-        this.setState({arr: this.generator2(10,this.division,2,1)});
+        resetAll();
+        setTest({arr: generator2(10,division,2,1)});
         break;
       case 'answer':
-        const flag = !this.state.isAnswer
-        this.setState({isAnswer: flag});
+        const flag = !test.isAnswer
+        setTest({isAnswer: flag});
         break;
       case 'check':
-        if(this.state.isShow==='hidden'){
-          this.setState({
+        if(test.isShow==='hidden'){
+          setTest({
             isShow : 'visible'
         })
         // e.target.innerText = '隐藏批改'
       }else{
-          this.setState({
+          setTest({
             isShow : 'hidden'
         })
         // e.target.innerText = '批改作业'
@@ -183,43 +160,59 @@ class MathTest extends Component {
         
     }
   }
-  render() {
-    return (
-      <div className='container'>
-        <h2 className='title'> 小学数学刷题 </h2>
+  const resetAll = () => { 
+    //reset form
+    document.getElementById("data-box").reset();
+    //reset state
+    setTest(initState);
+  }
+   //加个防抖
+   const debounce = (fn,delay)=>{
+    let timer = null;
+    return (...args)=>{
+      if(timer) {
+        clearTimeout(timer);
+      }
+      timer = setTimeout(()=>fn(...args),delay);   
+    }
+  }
+
+  return(
+    <div className='container'>
+        <h2 className='title'> Arithmetic Calculation Exercise for Henry </h2>
         <nav >
-          <button name="add10" onClick={(e)=>this.handleClick(e)}>10以内加法10道</button>
-          <button name="sub10" onClick={(e)=>this.handleClick(e)}>10以内减法10道</button>
-          <button name="add100" onClick={(e)=>this.handleClick(e)}>100以内加法10道</button>
-          <button name="sub100" onClick={(e)=>this.handleClick(e)}>100以内减法10道</button>
-          <button name="multiply " onClick={(e)=>this.handleClick(e)}>乘法10道</button>
-          <button name="division " onClick={(e)=>this.handleClick(e)}>除法10道</button>
+          <button name="add10" onClick={(e)=>handleClick(e)}>Addition within 10</button>
+          <button name="sub10" onClick={(e)=>handleClick(e)}>Subtraction within 10</button>
+          <button name="add100" onClick={(e)=>handleClick(e)}>Addition within 100</button>
+          <button name="sub100" onClick={(e)=>handleClick(e)}>Subtraction within 100</button>
+          <button name="multiply " onClick={(e)=>handleClick(e)}>Multiplication</button>
+          <button name="division " onClick={(e)=>handleClick(e)}>Division</button>
         </nav>
 
-        <form id='data-box' onChange={this.throttle(this.handleChange,500)}>
+        <form id='data-box' onChange={debounce(handleChange,500)}>
           Question
-          <ul style={{listStyle:'none'}} ref={this.myRef} >
-            {this.state.arr.map(data =>
+          <ul style={{listStyle:'none'}} ref={myRef} >
+            {test.arr.map(data =>
             <li key={data.index} >
               <span style={{fontWeight:200}}>({data.index+1})</span> 
               <span>{data.Q}</span>&nbsp;
               <input type="text" name={data.index} />
-              <span name={data.index} style={{color:'red',visibility:`${this.state.isShow}` }}></span>
+              <span name={data.index} style={{color:'red',visibility:`${test.isShow}` }}></span>
             </li>
             )}
           </ul>
         </form>
         <div>
-          <button name='check' onClick={this.handleClick}>{this.state.isShow==='hidden'?'批改作业':'隐藏批改'}</button>
+          <button name='check' onClick={handleClick}>{test.isShow==='hidden'?'Grading':'Hidden'}</button>
         </div>
-        <div style={{visibility:`${this.state.isShow}` }}>
-          <button name='answer' onClick={e=>this.handleClick(e)}>Answer</button>
-          {this.state.isAnswer && this.state.arr.map(data =><span key={data.index}><span style={{fontWeight:200}}>({data.index+1})</span> {data.A} </span>)}
+        <div style={{visibility:`${test.isShow}` }}>
+          <button name='answer' onClick={e=>handleClick(e)}>Answer</button>
+          {test.isAnswer && test.arr.map(data =><span key={data.index}><span style={{fontWeight:200}}>({data.index+1})</span> {data.A} </span>)}
         </div>
         
       </div>
     );
-  }
+  
 }
 
 export default MathTest;
